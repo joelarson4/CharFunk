@@ -26,7 +26,7 @@ CharFunk.isValidName('function',true);  //false - when that second argument is s
 CharFunk.replaceMatches('What will come out?',function(ch) {
   return CharFunk.isLetterOrDigit(ch) || ch=='?';
   },'_'); //will return 'What_will_come_out_'
-  
+
 //OK, you could do that with JavaScript regex easily enough, but you could not do this:
 CharFunk.replaceMatches('جمهورية مصر العربية',function(ch) {
     return !CharFunk.isLetterOrDigit(ch);
@@ -36,9 +36,9 @@ CharFunk.replaceMatches('جمهورية مصر العربية',function(ch) {
 CharFunk.lastIndexOf('Новые Известия',CharFunk.isUpperCase); //returns 6
 ```
 
-All you need is to download [charFunk-1.1.2.min.js](https://raw.github.com/joelarson4/CharFunk/master/charFunk-1.1.2.min.js) -- that's it, no other dependencies.
+All you need is to download [charFunk-1.1.3.min.js](https://raw.github.com/joelarson4/CharFunk/master/charFunk-1.1.3.min.js) -- that's it, no other dependencies.
 
-If you want to use in Node, you can simply 
+If you want to use in Node, you can simply
 
     npm install charfunk
 
