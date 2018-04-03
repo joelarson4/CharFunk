@@ -1,5 +1,5 @@
 //The purpose of this class is to generate the constants needed in CharFunk.
-//Currently these are just cut and pasted into the source, regeneration is likely unneeded so 
+//Currently these are just cut and pasted into the source, regeneration is likely unneeded so
 //It is not in a package because that would be overkill.
 
 import java.util.*;
@@ -12,7 +12,7 @@ public class GenCharFunkData {
     public static void main(String[] args) {
         try {
             System.out.println("Updating data...");
-            String srcfilnam="../charFunk-1.1.2.js";
+            String srcfilnam="../charFunk-1.1.3.js";
             String[] filcon=getFileContents(srcfilnam);
             out=new PrintWriter(new File(srcfilnam));
             out.println(filcon[0]);
@@ -28,7 +28,7 @@ public class GenCharFunkData {
 
             System.out.println("Updating test data...");
             out=new PrintWriter(new File("../../tests/charFunk-test-data.js"));
-            out.println("var TEST_DATA={");
+            out.println("module.exports = {");
             printTestsGeneralTypes();
             printTestsCase();
             printTestsDirectionality();
@@ -47,12 +47,12 @@ public class GenCharFunkData {
 
     public static String[] getFileContents(String filpth) throws Exception {
         FileReader filred=new FileReader(filpth);
-        BufferedReader bufred=new BufferedReader(filred); 
+        BufferedReader bufred=new BufferedReader(filred);
         StringBuffer bgnbuf=new StringBuffer(); //for the beginning of the file before the data
         StringBuffer endbuf=new StringBuffer(); //end of the file after the data
         String redstr;
         int pos=1; //1 means before data, 2 means within data, 3 means after
-        while((redstr=bufred.readLine()) != null) { 
+        while((redstr=bufred.readLine()) != null) {
             if(redstr.indexOf("//!end data")>-1) pos=3;
             if(pos==1) {
                 if(bgnbuf.length()>0) bgnbuf.append('\n');
@@ -61,10 +61,10 @@ public class GenCharFunkData {
             if(pos==3) {
                 if(endbuf.length()>0) endbuf.append('\n');
                 endbuf.append(redstr);
-            }            
+            }
             if(redstr.indexOf("//!start data")>-1) pos=2;
-        } 
-        bufred.close(); 
+        }
+        bufred.close();
         filred.close();
         return new String[] { bgnbuf.toString(), endbuf.toString() };
     }
@@ -80,14 +80,14 @@ public class GenCharFunkData {
     }
 
     public static void printTestsGeneralTypes() {
-        (new FullTable(out,"GTYPE")  { 
-            int check(char ch) { 
+        (new FullTable(out,"GTYPE")  {
+            int check(char ch) {
                 if(Character.isLetter(ch)) { return 1; }
                 else if(Character.isDigit(ch)) { return 2; }
                 else if(Character.getType(ch)==Character.LETTER_NUMBER) { return 3; }
                 else { return 4; }
             }
-        }).print(true);    
+        }).print(true);
     }
 
     //upper vs lower
@@ -95,18 +95,18 @@ public class GenCharFunkData {
         out.println("        _CASE={");
         (new PropTable(out,"UPPER") { boolean check(char ch) { return Character.isUpperCase(ch); }}).print(true);
         (new PropTable(out,"LOWER") { boolean check(char ch) { return Character.isLowerCase(ch); }}).print(true);
-        (new PropTable(out,"OTHER") { boolean check(char ch) { return !Character.isUpperCase(ch) && !Character.isLowerCase(ch); }}).print(false);    
+        (new PropTable(out,"OTHER") { boolean check(char ch) { return !Character.isUpperCase(ch) && !Character.isLowerCase(ch); }}).print(false);
         out.println("        },");
     }
 
     public static void printTestsCase() {
-        (new FullTable(out,"CASE")  { 
-            int check(char ch) { 
+        (new FullTable(out,"CASE")  {
+            int check(char ch) {
                 if(Character.isUpperCase(ch)) { return 1; }
                 else if(Character.isLowerCase(ch)) { return 2; }
                 else { return 3; }
             }
-        }).print(true);    
+        }).print(true);
     }
 
     //directionality
@@ -136,11 +136,11 @@ public class GenCharFunkData {
     }
 
     public static void printTestsDirectionality() {
-        (new FullTable(out,"DIRECTIONALITY")  { 
-            int check(char ch) { 
+        (new FullTable(out,"DIRECTIONALITY")  {
+            int check(char ch) {
                 return Character.getDirectionality(ch);
             }
-        }).print(true);    
+        }).print(true);
     }
 
     //mirrored
@@ -152,43 +152,43 @@ public class GenCharFunkData {
     }
 
     public static void printTestsMirrored() {
-        (new FullTable(out,"MIRRORED")  { 
-            int check(char ch) { 
+        (new FullTable(out,"MIRRORED")  {
+            int check(char ch) {
                 if(Character.isMirrored(ch)) { return 1; }
                 else { return 2; }
             }
-        }).print(true);    
+        }).print(true);
     }
 
     //allowed in the middle of a JavaScript variable name
     public static void printDataNameMid() {
         out.println("        _NAMEMID={");
         (new PropTable(out,"YES") { boolean check(char ch) { return GenCharFunkData.checkNameMid(ch); } }).print(true);
-        (new PropTable(out,"NO")  { boolean check(char ch) { return !GenCharFunkData.checkNameMid(ch); } }).print(false);    
+        (new PropTable(out,"NO")  { boolean check(char ch) { return !GenCharFunkData.checkNameMid(ch); } }).print(false);
         out.println("        },");
     }
 
     public static void printTestsNameMid() {
-        (new FullTable(out,"NAMEMID")  { 
-            int check(char ch) { 
+        (new FullTable(out,"NAMEMID")  {
+            int check(char ch) {
                 if(GenCharFunkData.checkNameMid(ch)) { return 1; }
                 else { return 2; }
             }
-        }).print(true);    
+        }).print(true);
     }
 
     public static boolean checkNameMid(char ch) {
         //From the excellent http://mathiasbynens.be/notes/javascript-identifiers:
-        //  An identifier must start with $, _, or any character in the Unicode categories 
-        //  “Uppercase letter (Lu)”, “Lowercase letter (Ll)”, “Titlecase letter (Lt)”, 
-        //  “Modifier letter (Lm)”, “Other letter (Lo)”, or “Letter number (Nl)”.    
-        //  The rest of the string can contain the same characters, plus any U+200C zero 
-        //  width non-joiner characters, U+200D zero width joiner characters, and characters 
-        //  in the Unicode categories “Non-spacing mark (Mn)”, “Spacing combining mark (Mc)”, 
+        //  An identifier must start with $, _, or any character in the Unicode categories
+        //  “Uppercase letter (Lu)”, “Lowercase letter (Ll)”, “Titlecase letter (Lt)”,
+        //  “Modifier letter (Lm)”, “Other letter (Lo)”, or “Letter number (Nl)”.
+        //  The rest of the string can contain the same characters, plus any U+200C zero
+        //  width non-joiner characters, U+200D zero width joiner characters, and characters
+        //  in the Unicode categories “Non-spacing mark (Mn)”, “Spacing combining mark (Mc)”,
         //  “Decimal digit number (Nd)”, or “Connector punctuation (Pc)”.
 
-        return ch=='$' || ch=='_' 
-            || Character.isLetterOrDigit(ch) 
+        return ch=='$' || ch=='_'
+            || Character.isLetterOrDigit(ch)
             || ch==0x200C
             || ch==0x200D
             || Character.getType(ch)==Character.LETTER_NUMBER
@@ -196,7 +196,7 @@ public class GenCharFunkData {
             || Character.getType(ch)==Character.COMBINING_SPACING_MARK
             || Character.getType(ch)==Character.DECIMAL_DIGIT_NUMBER
             || Character.getType(ch)==Character.CONNECTOR_PUNCTUATION
-            ; 
+            ;
     }
 
     //whitespace
@@ -208,15 +208,15 @@ public class GenCharFunkData {
     }
 
     public static void printTestsWhitespace() {
-        (new FullTable(out,"WHITESPACE")  { 
-            int check(char ch) { 
+        (new FullTable(out,"WHITESPACE")  {
+            int check(char ch) {
                 if(Character.isWhitespace(ch)) { return 1; }
                 else { return 2; }
             }
-        }).print(false);    
+        }).print(false);
     }
 
-}    
+}
 
 //keeps track of a particular property being true/false
 class PropTable {
@@ -235,7 +235,7 @@ class PropTable {
 
     void build() {
         for(int ci=0; ci<65535; ci++) {
-            record(ci,check((char)ci)); 
+            record(ci,check((char)ci));
         }
     }
 
@@ -245,7 +245,7 @@ class PropTable {
     }
 
     void record(int ci, boolean on) {
-        if(!lastOn && on) { 
+        if(!lastOn && on) {
             if(table.length()>0) { table.append(','); }
             table.append(ci-lastOnCi);
             lastOnCi=ci;
@@ -274,7 +274,7 @@ class FullTable {
 
     void build() {
         for(int ci=0; ci<65535; ci++) {
-            record(ci,check((char)ci)); 
+            record(ci,check((char)ci));
         }
     }
 

@@ -12,8 +12,8 @@ public class GenDoco {
     public static void main(String[] args) {
         try {
             System.out.println("Generating Doco...");
-            ArrayList<String> inplin=getFileContents("../charFunk-1.1.2.js");//source javascript lines
-            ArrayList<String> inpmkd=getFileContents("../../readme.md"); 
+            ArrayList<String> inplin=getFileContents("../charFunk-1.1.3.js");//source javascript lines
+            ArrayList<String> inpmkd=getFileContents("../../readme.md");
             ArrayList<String> outmkd=new ArrayList<String>();//output markdown
 
             for(String lin : inpmkd) {
@@ -77,13 +77,13 @@ public class GenDoco {
 
     public static ArrayList<String> getFileContents(String filpth) throws Exception {
         FileReader filred=new FileReader(filpth);
-        BufferedReader bufred=new BufferedReader(filred); 
-        ArrayList<String> fillin=new ArrayList<String>(); 
+        BufferedReader bufred=new BufferedReader(filred);
+        ArrayList<String> fillin=new ArrayList<String>();
         String redstr;
-        while((redstr=bufred.readLine()) != null) { 
+        while((redstr=bufred.readLine()) != null) {
             fillin.add(redstr);
-        } 
-        bufred.close(); 
+        }
+        bufred.close();
         filred.close();
         return fillin;
     }

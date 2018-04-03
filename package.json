@@ -1,32 +1,19 @@
 {
   "name": "charfunk",
-  "version": "1.1.2",
-  "main": "charFunk-1.1.2.min.js",
+  "version": "1.1.3",
+  "main": "charFunk-1.1.3.min.js",
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.3.0",
-    "grunt-contrib-nodeunit": "~0.1.2",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-qunit": "~0.2.0",
-    "phantomjs": "~1.9.0-1",
-    "grunt-mocha": "~0.4.10"
+    "grunt": "~1.0.2",
+    "grunt-contrib-jshint": "~0.11.0",
+    "grunt-contrib-uglify": "~3.3.0",
+    "jest": "^22.4.2"
   },
   "description": "CharFunk provides some of the functionality that Java's Character class does.  Many of these things would be difficult to do in JavaScript without very unweildy RegExps or using [XRegExp](http://xregexp.com/).  For example, it lets you test whether unicode characters in the Basic Multilingual Plane (0000 to FFFF) are letters or digits.",
   "directories": {
     "test": "tests"
   },
-  "dependencies": {
-    "grunt-contrib-nodeunit": "~0.1.2",
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.3.0",
-    "grunt-mocha": "~0.4.10",
-    "grunt-contrib-qunit": "~0.2.0",
-    "grunt-lib-phantomjs": "~0.3.0",
-    "phantomjs": "~1.9.0-1",
-    "grunt-contrib-uglify": "~0.2.0"
-  },
   "scripts": {
-    "test": "tests/charFunk-tests.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
